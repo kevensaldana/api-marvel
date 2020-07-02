@@ -1,13 +1,5 @@
 from fastapi import FastAPI
+from app.api.controllers.character_list_controller import CharacterListController
 
 app = FastAPI()
-
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World22"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
+app.add_api_route("/", CharacterListController.run)
