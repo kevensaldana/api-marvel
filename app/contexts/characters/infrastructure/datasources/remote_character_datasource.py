@@ -1,24 +1,40 @@
 import httpx
 import os
-
 from app.contexts.characters.infrastructure.models.character_model import CharacterModel
+from app.contexts.characters.infrastructure.models.list_character_model import ListCharacterModel
+from app.contexts.characters.infrastructure.models.params_list_character import ParamsListCharacter
 
 
 def transform_items(item):
-    return CharacterModel(item.id, item.name, f"{item.thumbnail.path.replace('http', 'https')}.{item.thumbnail.extension}")
+    thumbnail = item.get('thumbnail')
+    return CharacterModel(item.get('id'),
+                          item.get('name'),
+                          f"{thumbnail.get('path').replace('http', 'https')}.{thumbnail.get('extension')}",
+                          item.get('description'))
 
 
 class RemoteCharacterDataSource:
-    def list(self, limit, offset):
-        print(self.__get_url())
-        response = httpx.get(self.__get_url()).json()
-        print(response)
-        # result = map(transform_items, response.result)
-        return response
+    url = 'https://gateway.marvel.com:443/v1/public/characters'
+
+    def list(self, params: ParamsListCharacter):
+        with self.__get_client(params) as client:
+            request = client.get(self.url)
+        print(request.json())
+        response = request.json().get('data')
+        result = list(map(transform_items, response.get('results')))
+        return ListCharacterModel(response.get('count'), response.get('limit'), result, response.get('total'))
 
     @staticmethod
-    def __get_url():
-        AM_TS = os.environ.get("AM_TS")
-        AM_KEY = os.environ.get("AM_KEY")
-        AM_HASH = os.environ.get("AM_HASH")
-        return f'https://gateway.marvel.com:443/v1/public/characters?ts={AM_TS}&apikey={AM_KEY}&hash=${AM_HASH}'
+    def __get_client(params: ParamsListCharacter):
+        headers = {'Content-Type': 'application/json'}
+        params = {
+            'ts': os.environ.get("AM_TS"),
+            'apikey': os.environ.get("AM_KEY"),
+            'hash': os.environ.get("AM_HASH"),
+            'limit': params.limit,
+            'offset': params.offset,
+            'orderBy': params.orderBy
+        }
+        if not (params.get('nameStartsWith') is None):
+            params.update({'nameStartsWith': params.get('nameStartsWith')})
+        return httpx.Client(headers=headers, params=params)
