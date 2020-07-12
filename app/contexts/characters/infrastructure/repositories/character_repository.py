@@ -6,5 +6,5 @@ class CharacterRepository:
     def __init__(self):
         self.__datasource = RemoteCharacterDataSource()
 
-    def list(self, params: ParamsListCharacter):
-        return self.__datasource.list(params)
+    async def list(self, params: ParamsListCharacter):
+        return await self.__datasource.list(params)

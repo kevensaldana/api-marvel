@@ -6,5 +6,5 @@ class GetAllCharacterUseCase:
     def __init__(self):
         self.__repository = CharacterRepository()
 
-    def list(self, params: ParamsListCharacter):
-        return self.__repository.list(params)
+    async def list(self, params: ParamsListCharacter):
+        return await self.__repository.list(params)
