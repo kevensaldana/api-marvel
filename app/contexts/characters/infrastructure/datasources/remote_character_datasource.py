@@ -1,10 +1,12 @@
 import httpx
 import os
+
+from app.contexts.characters.application.boundaries.get_all_character.get_all_character_input import \
+    GetAllCharacterInput
 from app.contexts.characters.infrastructure.datasources.error_timeout_marvel import ErrorTimeoutMarvel
 from app.contexts.characters.infrastructure.datasources.http_error_marvel import HttpErrorMarvel
 from app.contexts.characters.infrastructure.models.character_model import CharacterModel
 from app.contexts.characters.infrastructure.models.list_character_model import ListCharacterModel
-from app.contexts.characters.infrastructure.models.params_list_character import ParamsListCharacter
 
 
 def transform_items(item):
@@ -18,7 +20,7 @@ def transform_items(item):
 class RemoteCharacterDataSource:
     url = 'https://gateway.marvel.com:443/v1/public/characters'
 
-    async def list(self, params: ParamsListCharacter):
+    async def list(self, params: GetAllCharacterInput):
         async with self.__get_client(params) as client:
             try:
                 request = await client.get(self.url)
@@ -34,7 +36,7 @@ class RemoteCharacterDataSource:
                 raise ErrorTimeoutMarvel()
 
     @staticmethod
-    def __get_client(params: ParamsListCharacter):
+    def __get_client(params: GetAllCharacterInput):
         headers = {'Content-Type': 'application/json'}
         params = {
             'ts': os.environ.get("AM_TS"),

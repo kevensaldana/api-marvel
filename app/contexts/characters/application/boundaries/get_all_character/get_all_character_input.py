@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ParamsListCharacterOrderBy(str, Enum):
+class GetAllCharacterOrderByInput(str, Enum):
     ASC_NAME = 'name'
     ASC_MODIFIED = 'modified'
     DES_NAME = '-name'
@@ -11,12 +11,12 @@ class ParamsListCharacterOrderBy(str, Enum):
         return '%s' % self.value
 
 
-class ParamsListCharacter:
+class GetAllCharacterInput:
     def __init__(self,
-                 orderBy: ParamsListCharacterOrderBy = ParamsListCharacterOrderBy.ASC_NAME,
-                 limit: int = 100,
-                 offset: int = 0,
-                 nameStartsWith: str = None
+                 orderBy: GetAllCharacterOrderByInput,
+                 limit: int,
+                 offset: int,
+                 nameStartsWith: str
                  ):
         self.orderBy = orderBy
         self.limit = limit
