@@ -3,7 +3,9 @@ version: '3'
 services:
   api:
     build: .
-    command: ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "80"]
+    command: >
+      sh -c "pip install pydevd-pycharm~=192.6817.19 &&
+             uvicorn app.main:app --reload --host 0.0.0.0 --port 80"
     ports:
       - "5000:80"
     environment:

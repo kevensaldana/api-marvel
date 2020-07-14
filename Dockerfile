@@ -5,11 +5,10 @@ RUN pip install \
   uvicorn \
   httpx \
   dependency-injector \
-  python-dotenv \
-  pydevd-pycharm~=192.6817.19
+  python-dotenv
 
 COPY ./app /app
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--workers","3"]
 
 EXPOSE 80
