@@ -9,6 +9,6 @@ RUN pip install \
 
 COPY ./app /app
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--workers","3"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--workers","3"]
 
-EXPOSE 80
+EXPOSE 8080
