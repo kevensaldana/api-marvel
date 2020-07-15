@@ -14,14 +14,14 @@ router = APIRouter()
 
 class ParamsListCharacter(GetAllCharacterInput):
     def __init__(self,
-                 orderBy=GetAllCharacterOrderByInput.ASC_NAME,
-                 limit: int = 100,
-                 offset: int = 0,
+                 orderBy: Optional[GetAllCharacterOrderByInput] = GetAllCharacterOrderByInput.ASC_NAME,
+                 limit: Optional[int] = 100,
+                 offset: Optional[int] = 0,
                  nameStartsWith: Optional[str] = None):
         super().__init__(orderBy, limit, offset, nameStartsWith)
 
 
-@router.get("/")
+@router.get("")
 async def list_character(params: ParamsListCharacter = Depends(ParamsListCharacter)):
     try:
         return await GetAllCharacterUseCase().list(params)
